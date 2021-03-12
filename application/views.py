@@ -1,9 +1,9 @@
-from app import app
+from application import application
 
-@app.route('/')
+@application.route('/')
 def hello_world():
     return 'Hello world1!'
 
-@app.route('/about/')
+@application.route('/about/')
 def about():
     return "All about Flask"
