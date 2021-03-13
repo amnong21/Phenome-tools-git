@@ -1,5 +1,6 @@
 from application import application
 from flask import render_template, request, redirect, url_for, abort, send_from_directory, jsonify, make_response
+from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 import os
 
@@ -69,3 +70,4 @@ def upload_file():
 
 
     return render_template("upload_file.html")
+
