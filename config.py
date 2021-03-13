@@ -8,8 +8,8 @@ class Config(object):
     ALLOWED_IMAGE_EXTENSIONS = ["JPEG", "JPG", "PNG", "GIF"]
 
     # UPLOAD_PATH = "C:\\Users\\user\\Documents"
-    UPLOAD_PATH   = "C:\\Users\\user\\Documents\\Python Scripts\\FieldMapApp\\server\\uploads\\"
-    DOWNLOAD_PATH = "C:\\Users\\user\\Documents\\Python Scripts\\FieldMapApp\\server\\downloads\\"
+    UPLOAD_PATH   = "C:\\Users\\user\\Documents\\Python_Scripts\\Phenome_tools\\server\\uploads\\"
+    DOWNLOAD_PATH = "C:\\Users\\user\\Documents\\Python_Scripts\\Phenome_tools\\server\\downloads\\"
 
 class ProductionConfig(Config):
     
