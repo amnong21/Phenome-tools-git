@@ -10,10 +10,6 @@ from application.util.helpers import upload_file_to_s3
 def index():
     return render_template("/index.html")
 
-@application.route('/about/')
-def about():
-    return "All about Flask"
-
 
 def allowed_image(filename):
     if not "." in filename:
@@ -38,7 +34,6 @@ def allowed_file(filename):
 @application.route("/upload-file", methods=["GET", "POST"])
 def upload_file():
 
-    print("amnonAWS_BUCKET_NAME:{}".format(os.getenv("AWS_BUCKET_NAME")))
     if request.method == "POST":
 
         if request.files:
@@ -119,49 +114,3 @@ def map_convert(file_name):
     df.to_csv(os.path.join(app.config["DOWNLOAD_PATH"], final_file_name), index_label='index')
     return final_file_name
 
-
-# function to check file extension
-# def allowed_file(filename):
-#     return '.' in filename and \
-#         filename.rsplit('.', 1)[1].lower() in application.config["UPLOAD_EXTENSIONS"]
-
-
-@application.route("/upload", methods=["POST"])
-def create():
-
-    # check whether an input field with name 'user_file' exist
-    if 'user_file' not in request.files:
-        flash('No user_file key in request.files')
-        return redirect(url_for('new'))
-
-    # after confirm 'user_file' exist, get the file from input
-    file = request.files['user_file']
-
-    # check whether a file is selected
-    if file.filename == '':
-        flash('No selected file')
-        return redirect(url_for('new'))
-
-    # check whether the file extension is allowed
-    if file and allowed_file(file.filename):
-        output = upload_file_to_s3(file) 
-        
-        # if upload success,will return file name of uploaded file
-        if output:
-            # write your code here 
-            # to save the file name in database
-
-            flash("Success upload")
-            return redirect(url_for('show'))
-
-        # upload failed, redirect to upload page
-        else:
-            flash("Unable to upload, try again")
-            return redirect(url_for('new'))
-        
-    # if file extension not allowed
-    else:
-        flash("File type not accepted,please try again.")
-        return redirect(url_for('new'))
-
-    return render_template("upload_file2.html")
