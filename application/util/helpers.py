@@ -15,7 +15,7 @@ def upload_file_to_s3(file, acl="public-read"):
         s3.upload_fileobj(
             file,
             os.getenv("AWS_BUCKET_NAME"),
-            file.filename,
+            '/uploads/' + file.filename, # TODO: use the actual config
             ExtraArgs={
                 "ACL": acl,
                 "ContentType": file.content_type

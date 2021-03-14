@@ -13,7 +13,7 @@ class Config(object):
 
 class ProductionConfig(Config):
     
-    UPLOAD_PATH   = "/server/uploads"
+    UPLOAD_PATH   = "/uploads/"
     DOWNLOAD_PATH = "/server/downloads"
     
 class DevelopmentConfig(Config):
