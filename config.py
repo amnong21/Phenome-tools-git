@@ -13,17 +13,19 @@ class Config(object):
 
 class ProductionConfig(Config):
     
-    UPLOAD_PATH   = "/uploads/"
-    DOWNLOAD_PATH = "/server/downloads"
+    UPLOAD_PATH   = "uploads/"
+    DOWNLOAD_PATH = "downloads/"
     
 class DevelopmentConfig(Config):
     DEBUG = True
 
     SESSION_COOKIE_SECURE = False
 
-    UPLOAD_PATH   = "C:\\Users\\user\\Documents\\Python_Scripts\\Phenome_tools\\server\\uploads\\"
-    DOWNLOAD_PATH = "C:\\Users\\user\\Documents\\Python_Scripts\\Phenome_tools\\server\\downloads\\"
-
+    # UPLOAD_PATH   = "C:\\Users\\user\\Documents\\Python_Scripts\\Phenome_tools\\server\\uploads\\"
+    # DOWNLOAD_PATH = "C:\\Users\\user\\Documents\\Python_Scripts\\Phenome_tools\\server\\downloads\\"
+    UPLOAD_PATH   = "uploads/"
+    DOWNLOAD_PATH = "downloads/"
+    
 class TestingConfig(Config):
     TESTING = True
 

@@ -1,6 +1,7 @@
 import boto3, botocore
 import os
 from werkzeug.utils import secure_filename
+from application import application
 
 s3 = boto3.client(
     "s3",
@@ -15,7 +16,7 @@ def upload_file_to_s3(file, acl="public-read"):
         s3.upload_fileobj(
             file,
             os.getenv("AWS_BUCKET_NAME"),
-            file.filename,
+            '{}{}'.format(application.config['UPLOAD_PATH'],file.filename),
             ExtraArgs={
                 "ACL": acl,
                 "ContentType": file.content_type
