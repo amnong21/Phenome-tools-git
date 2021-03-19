@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import os
 import pandas as pd
 from app.util.helpers import upload_file_to_s3
+from app.util.map_converter import map_convert
 
 @app.route('/')
 def index():
@@ -31,9 +32,9 @@ def allowed_file(filename):
     else:
         return False
 
+
 @app.route("/upload-file", methods=["GET", "POST"])
 def upload_file():
-
     if request.method == "POST":
 
         if request.files:
@@ -50,25 +51,23 @@ def upload_file():
             else:
                 filename = secure_filename(uploaded_file.filename)
                 flash("Begining upload..")
-                output = upload_file_to_s3(uploaded_file) 
+                file_url = upload_file_to_s3(uploaded_file) 
             # if upload success,will return file name of uploaded file
-            if output:
+            if file_url:
                 # write your code here 
                 # to save the file name in database
 
-                flash("upload Successful!")
+                flash("Successfully uploaded to {}".format(file_url))
+                # map convert and save to downloads folder
+                converted_file = map_convert(file_url, filename)
+                # save_converted_to_downloads_folder(converted_file)
+                flash("Message: {}".format(converted_file))
                 return redirect(request.url)
 
             # upload failed, redirect to upload page
             else:
                 flash("Unable to upload, try again")
                 return redirect(request.url)
-            # uploaded_file.save(os.path.join(application.config["UPLOAD_PATH"], filename))
-
-            # print("File has been saved")
-
-            # perform map_converter
-            # result_file_name = map_convert(filename)
 
             #send to get file
             # send_to_get_file = "/get-file/"+result_file_name
@@ -77,39 +76,5 @@ def upload_file():
             #     return redirect(send_to_get_file)     
             # except FileNotFoundError:
             #     abort(404)
-    
 
     return render_template("upload_file.html")
-
-
-def map_convert(file_name):
-    #file_name = file_name
-    path = os.path.join(app.config["UPLOAD_PATH"], file_name)
-    file_name_without_extension  = file_name.rsplit(".", 1)[0]
-    ext = file_name.rsplit(".", 1)[1]
-
-    # Read xlsx
-    dfs = pd.read_excel(path, sheet_name=0, header=None)
-    # dfs = pd.read_excel(path, sheet_name=0, dtype={'col1':str, 'col2':str})
-    [rows, cols] = dfs.shape
-
-    # Empty table of plots
-    plots = []
-
-    # Loop
-    for row in range(1, rows+1):
-        for col in range(1, cols+1):
-            if pd.isna(dfs.iat[row-1, col-1]) == True:
-                continue
-            else:
-                plot = [dfs.iat[row-1, col-1], dfs.iat[row-1, col-1], row, col]
-                plots.append(plot)
-
-    # Convert list to DF
-    df = pd.DataFrame(plots, columns=['Entry code', 'Plot', 'row', 'column'])
-
-    # Save csv in DOWNLOADS to csv
-    final_file_name= file_name_without_extension + '_plot_list.csv'
-    df.to_csv(os.path.join(app.config["DOWNLOAD_PATH"], final_file_name), index_label='index')
-    return final_file_name
-

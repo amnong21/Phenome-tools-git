@@ -4,14 +4,6 @@
 
 {% block main %}
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    {% for msg in messages %}
-      <p>{{msg}}</p>
-    {% endfor %}
-  {%endif%}
-{%endwith%}
-
 <div class="con">
   <div class="row">
     <div class="col">
