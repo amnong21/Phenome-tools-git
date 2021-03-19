@@ -9,7 +9,6 @@ s3 = boto3.client(
     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
 )
 
-
 def upload_file_to_s3(file, acl="public-read"):
     filename = secure_filename(file.filename)
     try:

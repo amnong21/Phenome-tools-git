@@ -1,10 +1,10 @@
-from application import application
+from app import app
 from flask import render_template, request, redirect, url_for, abort, send_from_directory, jsonify, make_response, flash
 from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 import os
 import pandas as pd
-from application.util.helpers import upload_file_to_s3
+from app.util.helpers import upload_file_to_s3
 
 @application.route('/')
 def index():
@@ -15,7 +15,7 @@ def allowed_image(filename):
     if not "." in filename:
         return False
     ext  = filename.rsplit(".", 1)[1]
-    if ext.upper() in application.config["ALLOWED_IMAGE_EXTENSIONS"]:
+    if ext.upper() in app.config["ALLOWED_IMAGE_EXTENSIONS"]:
         return True
     else:
         return False
@@ -26,7 +26,7 @@ def allowed_file(filename):
     if not "." in filename:
         return False
     ext  = filename.rsplit(".", 1)[1]
-    if ext.upper() in application.config["UPLOAD_EXTENSIONS"]:
+    if ext.upper() in app.config["UPLOAD_EXTENSIONS"]:
         return True
     else:
         return False
@@ -40,7 +40,7 @@ def upload_file():
 
             uploaded_file = request.files["file"]
             if uploaded_file.filename == "":
-                flash("First select a file")
+                print("First select a file")
                 return redirect(request.url)
 
             if not allowed_file(uploaded_file.filename):
@@ -85,7 +85,7 @@ def upload_file():
 
 def map_convert(file_name):
     #file_name = file_name
-    path = os.path.join(application.config["UPLOAD_PATH"], file_name)
+    path = os.path.join(app.config["UPLOAD_PATH"], file_name)
     file_name_without_extension  = file_name.rsplit(".", 1)[0]
     ext = file_name.rsplit(".", 1)[1]
 
