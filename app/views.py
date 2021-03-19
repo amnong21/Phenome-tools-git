@@ -6,7 +6,7 @@ import os
 import pandas as pd
 from app.util.helpers import upload_file_to_s3
 
-@application.route('/')
+@app.route('/')
 def index():
     return render_template("/index.html")
 
@@ -31,7 +31,7 @@ def allowed_file(filename):
     else:
         return False
 
-@application.route("/upload-file", methods=["GET", "POST"])
+@app.route("/upload-file", methods=["GET", "POST"])
 def upload_file():
 
     if request.method == "POST":
