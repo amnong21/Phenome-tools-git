@@ -24,9 +24,23 @@
         <button type="submit" class="btn btn-primary">Upload</button>
 
       </form>
-
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      {% for msg in messages %}
+      <p>{{msg}}</p>
+      {% endfor %}
+      {%endif%}
+      {%endwith%}
     </div>
   </div>
 </div>
+<script type="text/javascript">
 
+  $('.custom-file input').change(function (e) {
+      if (e.target.files.length) {
+          $(this).next('.custom-file-label').html(e.target.files[0].name);
+      }
+  });
+
+</script>
 {% endblock %}

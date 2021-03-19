@@ -40,24 +40,23 @@ def upload_file():
 
             uploaded_file = request.files["file"]
             if uploaded_file.filename == "":
-                print("First select a file")
+                flash("First select a file")
                 return redirect(request.url)
 
             if not allowed_file(uploaded_file.filename):
-                print("File extension is not allowed")
+                flash("File extension is not allowed, use only {}".format(', '.join(app.config['UPLOAD_EXTENSIONS'])))
                 return redirect(request.url)
 
             else:
                 filename = secure_filename(uploaded_file.filename)
-                flash("Begining upload!")
+                flash("Begining upload..")
                 output = upload_file_to_s3(uploaded_file) 
-                print('output: {}'.format(output))
             # if upload success,will return file name of uploaded file
             if output:
                 # write your code here 
                 # to save the file name in database
 
-                flash("Success upload")
+                flash("upload Successful!")
                 return redirect(request.url)
 
             # upload failed, redirect to upload page
