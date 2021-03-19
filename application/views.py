@@ -40,7 +40,7 @@ def upload_file():
 
             uploaded_file = request.files["file"]
             if uploaded_file.filename == "":
-                print("First select a file")
+                flash("First select a file")
                 return redirect(request.url)
 
             if not allowed_file(uploaded_file.filename):
@@ -85,7 +85,7 @@ def upload_file():
 
 def map_convert(file_name):
     #file_name = file_name
-    path = os.path.join(app.config["UPLOAD_PATH"], file_name)
+    path = os.path.join(application.config["UPLOAD_PATH"], file_name)
     file_name_without_extension  = file_name.rsplit(".", 1)[0]
     ext = file_name.rsplit(".", 1)[1]
 
