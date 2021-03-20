@@ -84,18 +84,3 @@ def download_image(resource):
 
     url = s3.generate_presigned_url('get_object', Params = {'Bucket': os.getenv('AWS_BUCKET_NAME'), 'Key': resource}, ExpiresIn = 100)
     return redirect(url, code=302)
-
-
-@app.route("/get-csv/<csv_id>")
-def get_csv(csv_id):
-
-    filename = csv_id
-    client = boto3.client(
-        's3', 
-        aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
-        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-        )
-    try:
-        return send_from_directory(app.config["DOWNLOAD_PATH"], filename=filename, as_attachment=True)
-    except FileNotFoundError:
-        abort(404)

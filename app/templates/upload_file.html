@@ -8,30 +8,30 @@
   <div class="row">
     <div class="col">
 
-      <h1>Convert 2-Dimensional map to list of plots</h1>
+      <h1>Field map converter</h1>
       <hr>
 
       <form action="/upload-file" method="POST" enctype="multipart/form-data">
         <div class="form-group">
-          <label>Allowed files: xlsx, xls</label>
+          <label>Convert 2-Dimensional map to a list of plots ready for upload into PhenomeOne</label>
           <div class="custom-file">
             <input type="file" class="custom-file-input" name="file" id="file-upload">
-            <label class="custom-file-label" for="file-upload">Select file to convert..</label>
+            <label class="custom-file-label" for="file-upload">Select file to convert (xlsx, xls)..</label>
           </div>
         </div>
-      
+
         <button type="submit" class="btn btn-primary">Convert and Download</button>
 
-    <script>
-        $('#file-upload').on('change',function(){
+        <script>
+          $('#file-upload').on('change', function () {
             //get the file name
             var fileName = $(this).val();
             var cleanFileName = fileName.replace('C:\\fakepath\\', " ");
             //replace the "Choose a file" label
             $(this).next('.custom-file-label').html(cleanFileName);
-        })
-    </script>
-   </form>
+          })
+        </script>
+      </form>
       {% with messages = get_flashed_messages() %}
       {% if messages %}
       {% for msg in messages %}
@@ -43,5 +43,8 @@
     </div>
   </div>
 </div>
-
+<div>
+<div class="aligncenter">
+  <center><img src="{{url_for('static', filename='img/ilustrate.png')}}" alt="Convert your field map", style="width:70%; padding-top: 30px;"></center>
+</div>
 {% endblock %}

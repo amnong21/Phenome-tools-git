@@ -2,59 +2,55 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Import the Bootstrap stylesheet -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <!-- Import our custom stylesheet -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Import the Bootstrap stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <!-- Import our custom stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-    <title>{% block title %}{% endblock %}</title>
-    <!-- This script is to put the selected file in the select file box-->
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+  <title>{% block title %}{% endblock %}</title>
+  <!-- This script is to put the selected file in the select file box-->
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+    integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+    crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
-        <a class="navbar-brand" href="#">Menu</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="/"> Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/upload-file">Map Converter</a>
-            </li>
-          </ul>
-        </div>
-      
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/admin/dashboard">Admin</a>
-            </li>
-          </ul>
-        </div>
-      
-      </nav>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+    <a href="https://knowledge-base.phenome-networks.com/kb/en" target="_blank">
+    <img src="{{url_for('static', filename='img/phenome_Logo_Final.png')}}"
+      alt="Phenome" style="width:130px" /></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <main>
-        {% block main %}{% endblock %}
-    </main>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/" style="padding-left: 50px;"> Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/upload-file" style="padding-left: 25px;">Map Converter</a>
+        </li>
+      </ul>
+    </div>
 
-    <!-- Import jquery 3.3.1 slim min -->
-    <script src="{{ url_for('static', filename='js/jquery.slim.min.js') }}"></script>
-    <!-- Import Bootstrap bundle -->
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-    <!-- Import our custom JavaScript -->
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-    {% block script %}{% endblock %}
+  </nav>
+
+  <main>
+    {% block main %}{% endblock %}
+  </main>
+
+  <!-- Import jquery 3.3.1 slim min -->
+  <script src="{{ url_for('static', filename='js/jquery.slim.min.js') }}"></script>
+  <!-- Import Bootstrap bundle -->
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  <!-- Import our custom JavaScript -->
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block script %}{% endblock %}
 </body>
 
 </html>
-
