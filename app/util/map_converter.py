@@ -2,9 +2,7 @@ import pandas as pd
 import boto3, botocore
 import os
 from io import StringIO #python3 
-from app.util.helpers import save_csv_to_s3
-import s3fs
-
+from app import app
 
 
 def map_convert(file_url, file_name):
@@ -14,7 +12,6 @@ def map_convert(file_url, file_name):
 
     # Read xlsx
     dfs = pd.read_excel(file_url, sheet_name=0, header=None)
-    # dfs = pd.read_excel(path, sheet_name=0, dtype={'col1':str, 'col2':str})
     [rows, cols] = dfs.shape
 
     # Empty table of plots
@@ -33,20 +30,15 @@ def map_convert(file_url, file_name):
     converted_df = pd.DataFrame(plots, columns=['Entry code', 'Plot', 'row', 'column'])
     final_file_name= file_name_without_extension + '_plot_list.csv'
     
-    # fs = s3fs.S3FileSystem(anon=False)
-    # path = os.getenv("AWS_BUCKET_NAME") + '/' + final_file_name
-    # with fs.open(path,'w') as f:
-    #     converted_df.to_csv(f)
-
     csv_buffer = StringIO()
     converted_df.to_csv(csv_buffer)
-    client = boto3.client('s3')
+    client = boto3.client('s3', 
+        aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
+        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
     response = client.put_object(
         ACL = 'public-read-write',
         Body = csv_buffer.getvalue(),
-        Bucket = os.getenv("AWS_BUCKET_NAME"),
-        Key = 'my_file.csv'
+        Bucket = os.getenv('AWS_BUCKET_NAME'),
+        Key = final_file_name
     )
-    # output = save_csv_to_s3(final_file_name, csv_buffer)
-    # print(type(output))
-    return response
+    return final_file_name

@@ -8,22 +8,6 @@ s3 = boto3.client(
     aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
 
-
-def save_csv_to_s3(file, filename, acl="public-read"):
-    try:
-        s3_resource = boto3.resource('s3')
-        s3_resource.Object(os.getenv("AWS_BUCKET_NAME"), filename).put(Body=file.getvalue())
-
-    except Exception as e:
-        # This is a catch all exception, edit this part to fit your needs.
-        print("Something Happened Amnon: ", e)
-        return e
-    
-    # after upload file to s3 bucket, return url of the uploaded file
-    url_for_csv = "{}{}{}".format(os.getenv('AWS_DOMAIN'), app.config['UPLOAD_PATH'],filename)
-    return url_for_csv
-
-
 def upload_file_to_s3(file, acl="public-read"):
     filename = secure_filename(file.filename)
     try:

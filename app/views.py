@@ -6,6 +6,7 @@ import os
 import pandas as pd
 from app.util.helpers import upload_file_to_s3
 from app.util.map_converter import map_convert
+import boto3, botocore
 
 @app.route('/')
 def index():
@@ -62,19 +63,39 @@ def upload_file():
                 converted_file = map_convert(file_url, filename)
                 # save_converted_to_downloads_folder(converted_file)
                 flash("Message: {}".format(converted_file))
-                return redirect(request.url)
-
+                # return redirect('/download/'+converted_file)
+                return redirect('/download/' + converted_file)    
             # upload failed, redirect to upload page
             else:
                 flash("Unable to upload, try again")
                 return redirect(request.url)
 
-            #send to get file
-            # send_to_get_file = "/get-file/"+result_file_name
-            # print("send_to_get_file: {}".format(send_to_get_file))
-            #  try:
-            #     return redirect(send_to_get_file)     
-            # except FileNotFoundError:
-            #     abort(404)
-
     return render_template("upload_file.html")
+
+
+@app.route('/download/<resource>')
+def download_image(resource):
+    """ resource: name of the file to download"""
+    s3 = boto3.client(
+        's3', 
+        aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
+        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+    )
+
+    url = s3.generate_presigned_url('get_object', Params = {'Bucket': os.getenv('AWS_BUCKET_NAME'), 'Key': resource}, ExpiresIn = 100)
+    return redirect(url, code=302)
+
+
+@app.route("/get-csv/<csv_id>")
+def get_csv(csv_id):
+
+    filename = csv_id
+    client = boto3.client(
+        's3', 
+        aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
+        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+        )
+    try:
+        return send_from_directory(app.config["DOWNLOAD_PATH"], filename=filename, as_attachment=True)
+    except FileNotFoundError:
+        abort(404)
