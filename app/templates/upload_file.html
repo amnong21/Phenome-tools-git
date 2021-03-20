@@ -21,6 +21,8 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Convert and Download</button>
+       
+        <a href="{{url_for('static', filename='example_map.xlsx')}}" class="btn btn-primary" download="example_file">Example map</a>
 
         <script>
           $('#file-upload').on('change', function () {
