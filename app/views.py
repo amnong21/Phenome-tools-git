@@ -1,41 +1,70 @@
 from app import app
-from flask import render_template, request, redirect, url_for, abort, send_from_directory, jsonify, make_response, flash
+from flask import render_template, request, redirect, url_for, abort, send_from_directory, make_response, flash
 from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 import os
 import pandas as pd
-from app.util.helpers import upload_file_to_s3
+from app.util.helpers import upload_file_to_s3, save_csv_to_s3, allowed_image, allowed_file
 from app.util.map_converter import map_convert
 import boto3, botocore
+from app.util.map_convert import convert_map
 
 @app.route('/')
 def index():
+    return(redirect(url_for('home')))
+
+@app.route('/home')
+def home():
     return render_template("/index.html")
 
+@app.route('/download/<resource>')
+def download_file(resource):
+    """ resource: name of the file to download"""
+    s3 = boto3.client(
+        's3', 
+        aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
+        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+    )
+    url = s3.generate_presigned_url('get_object', Params = {'Bucket': os.getenv('AWS_BUCKET_NAME'), 'Key': resource}, ExpiresIn = 100)
+    return redirect(url, code=302)
 
-def allowed_image(filename):
-    if not "." in filename:
-        return False
-    ext  = filename.rsplit(".", 1)[1]
-    if ext.upper() in app.config["ALLOWED_IMAGE_EXTENSIONS"]:
-        return True
-    else:
-        return False
 
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST':
 
-def allowed_file(filename):
+       if request.files:
+            
+            uploaded_file = request.files["file"]
 
-    if not "." in filename:
-        return False
-    ext  = filename.rsplit(".", 1)[1]
-    if ext.upper() in app.config["UPLOAD_EXTENSIONS"]:
-        return True
-    else:
-        return False
+            if uploaded_file.filename == "":
+                flash("First select a file")
+                return redirect(request.url)
+            
+            if not allowed_file(uploaded_file.filename):
+                flash("File extension is not allowed, use only {}".format(', '.join(app.config['UPLOAD_EXTENSIONS'])))
+                return redirect(request.url)
 
+            filename = secure_filename(uploaded_file.filename) 
+            file_name_without_ext, file_ext  = filename.rsplit(".", 1)
+            final_file_name = file_name_without_ext + '_list_of_plots.csv'
+
+            if file_ext == 'csv':
+                plots = convert_map(pd.read_csv(request.files.get('file')))
+            else: #excel
+                plots = convert_map(pd.read_excel(request.files.get('file'), converters={'Date': str}))
+
+            df = pd.DataFrame(plots, columns=["Entry", "Plot", "Row", "Column"])
+            save_csv_to_s3(df, final_file_name)
+             
+            return redirect('/download/' + final_file_name)
+    return render_template('upload.html')
 
 @app.route("/upload-file", methods=["GET", "POST"])
 def upload_file():
+
+    file_url = False
+
     if request.method == "POST":
 
         if request.files:
@@ -44,43 +73,28 @@ def upload_file():
             if uploaded_file.filename == "":
                 flash("First select a file")
                 return redirect(request.url)
-
+            
             if not allowed_file(uploaded_file.filename):
                 flash("File extension is not allowed, use only {}".format(', '.join(app.config['UPLOAD_EXTENSIONS'])))
                 return redirect(request.url)
 
+            # if " " in uploaded_file.filename:
+            #     flash("No spaces are allowed in file name")
+            #     return redirect(request.url)
             else:
-                filename = secure_filename(uploaded_file.filename)
-                flash("Begining upload..")
-                file_url = upload_file_to_s3(uploaded_file) 
+                filename = secure_filename(uploaded_file.filename) 
+                file_url = upload_file_to_s3(uploaded_file)
             # if upload success,will return file name of uploaded file
             if file_url:
-                # write your code here 
-                # to save the file name in database
 
-                flash("Successfully uploaded to {}".format(file_url))
+                # flash("Successfully uploaded to {}".format(file_url))
                 # map convert and save to downloads folder
                 converted_file = map_convert(file_url, filename)
-                # save_converted_to_downloads_folder(converted_file)
-                flash("Message: {}".format(converted_file))
-                # return redirect('/download/'+converted_file)
                 return redirect('/download/' + converted_file)    
             # upload failed, redirect to upload page
             else:
                 flash("Unable to upload, try again")
                 return redirect(request.url)
-
+        else:
+            flash("Selected file doesn't fit the template")
     return render_template("upload_file.html")
-
-
-@app.route('/download/<resource>')
-def download_image(resource):
-    """ resource: name of the file to download"""
-    s3 = boto3.client(
-        's3', 
-        aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
-        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-    )
-
-    url = s3.generate_presigned_url('get_object', Params = {'Bucket': os.getenv('AWS_BUCKET_NAME'), 'Key': resource}, ExpiresIn = 100)
-    return redirect(url, code=302)

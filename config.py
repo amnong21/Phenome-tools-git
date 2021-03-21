@@ -4,7 +4,7 @@ class Config(object):
     SECRET_KEY='b_5#y2LF4Q8zxec]/'
     SESSION_COOKIE_SECURE = True
     
-    UPLOAD_EXTENSIONS = ['XLSX', 'XLS']
+    UPLOAD_EXTENSIONS = ['XLSX', 'XLS', 'CSV']
     ALLOWED_IMAGE_EXTENSIONS = ["JPEG", "JPG", "PNG", "GIF"]
     UPLOAD_PATH   = "uploads/"
     DOWNLOAD_PATH = "downloads/"
