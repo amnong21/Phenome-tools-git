@@ -1,6 +1,6 @@
 {% extends "templates/public_template.html" %}
 
-{% block title %}Upload{% endblock %}
+{% block title %}PhenomeTools-FieldMapConverter{% endblock %}
 
 {% block main %}
 
@@ -16,7 +16,8 @@
                     <label>Convert 2-Dimensional map to a list of plots ready for upload into PhenomeOne</label>
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" name="file" id="file-upload">
-                        <label class="custom-file-label" for="file-upload">Select file to convert (xlsx, xls, csv)..</label>
+                        <label class="custom-file-label" for="file-upload">Drag or Select file (xlsx, xls,
+                            csv)..</label>
                     </div>
                 </div>
 
@@ -34,6 +35,7 @@
                         $(this).next('.custom-file-label').html(cleanFileName);
                     })
                 </script>
+
             </form>
             {% with messages = get_flashed_messages() %}
             {% if messages %}

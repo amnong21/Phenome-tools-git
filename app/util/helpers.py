@@ -35,7 +35,7 @@ def upload_file_to_s3(file, acl="public-read"):
 
 def save_csv_to_s3(df, filename):
     csv_buffer = StringIO() # stores csv in buffer area
-    df.to_csv(csv_buffer)
+    df.to_csv(csv_buffer, index=False)
     response = s3.put_object(
         ACL = 'public-read-write',
         Body = csv_buffer.getvalue(),

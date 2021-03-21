@@ -5,7 +5,6 @@ from werkzeug.utils import secure_filename
 import os
 import pandas as pd
 from app.util.helpers import upload_file_to_s3, save_csv_to_s3, allowed_image, allowed_file
-from app.util.map_converter import map_convert
 import boto3, botocore
 from app.util.map_convert import convert_map
 
@@ -28,12 +27,11 @@ def download_file(resource):
     url = s3.generate_presigned_url('get_object', Params = {'Bucket': os.getenv('AWS_BUCKET_NAME'), 'Key': resource}, ExpiresIn = 100)
     return redirect(url, code=302)
 
-
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
-
-       if request.files:
+        
+        if request.files:
             
             uploaded_file = request.files["file"]
 
@@ -54,47 +52,8 @@ def upload():
             else: #excel
                 plots = convert_map(pd.read_excel(request.files.get('file'), converters={'Date': str}))
 
-            df = pd.DataFrame(plots, columns=["Entry", "Plot", "Row", "Column"])
+            df = pd.DataFrame(plots, columns=["Genotype", "Entry", "Plot", "Row", "Column"])
             save_csv_to_s3(df, final_file_name)
              
             return redirect('/download/' + final_file_name)
     return render_template('upload.html')
-
-@app.route("/upload-file", methods=["GET", "POST"])
-def upload_file():
-
-    file_url = False
-
-    if request.method == "POST":
-
-        if request.files:
-
-            uploaded_file = request.files["file"]
-            if uploaded_file.filename == "":
-                flash("First select a file")
-                return redirect(request.url)
-            
-            if not allowed_file(uploaded_file.filename):
-                flash("File extension is not allowed, use only {}".format(', '.join(app.config['UPLOAD_EXTENSIONS'])))
-                return redirect(request.url)
-
-            # if " " in uploaded_file.filename:
-            #     flash("No spaces are allowed in file name")
-            #     return redirect(request.url)
-            else:
-                filename = secure_filename(uploaded_file.filename) 
-                file_url = upload_file_to_s3(uploaded_file)
-            # if upload success,will return file name of uploaded file
-            if file_url:
-
-                # flash("Successfully uploaded to {}".format(file_url))
-                # map convert and save to downloads folder
-                converted_file = map_convert(file_url, filename)
-                return redirect('/download/' + converted_file)    
-            # upload failed, redirect to upload page
-            else:
-                flash("Unable to upload, try again")
-                return redirect(request.url)
-        else:
-            flash("Selected file doesn't fit the template")
-    return render_template("upload_file.html")

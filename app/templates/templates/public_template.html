@@ -9,8 +9,10 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
   <!-- Import our custom stylesheet -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-  <title>{% block title %}{% endblock %}</title>
+  <link rel="shortcut icon" type="image/png" href="static/img/favicon.png">
+  <title>    
+    {% block title %}{% endblock %}
+  </title>
   <!-- This script is to put the selected file in the select file box-->
   <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
     integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"

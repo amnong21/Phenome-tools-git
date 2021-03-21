@@ -2,7 +2,7 @@ import pandas as pd
 
 def convert_map(df):
     '''Gets pandas df and returns a list of plots ready for Phenome Upload'''
-
+    germplasm_name = 'genotype_Name'
     [rows, cols] = df.shape
     # Empty table of plots
     plots = []
@@ -13,6 +13,6 @@ def convert_map(df):
                 continue
             else:
                 plot_name = str(df.iat[row-1, col-1])
-                plot = [plot_name, plot_name, row, col]
+                plot = [germplasm_name, plot_name, plot_name, row, col]
                 plots.append(plot)
     return plots
