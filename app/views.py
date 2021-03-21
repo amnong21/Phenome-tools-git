@@ -4,7 +4,7 @@ from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 import os
 import pandas as pd
-from app.util.helpers import upload_file_to_s3, save_csv_to_s3, allowed_image, allowed_file
+from app.util.helpers import generate_download_url, save_csv_to_s3, allowed_image, allowed_file
 import boto3, botocore
 from app.util.map_convert import convert_map
 
@@ -16,15 +16,9 @@ def index():
 def home():
     return render_template("/index.html")
 
-@app.route('/download/<resource>')
-def download_file(resource):
-    """ resource: name of the file to download"""
-    s3 = boto3.client(
-        's3', 
-        aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
-        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-    )
-    url = s3.generate_presigned_url('get_object', Params = {'Bucket': os.getenv('AWS_BUCKET_NAME'), 'Key': resource}, ExpiresIn = 100)
+@app.route('/download/<filename>')
+def download_file(filename):
+    url = generate_download_url(filename)
     return redirect(url, code=302)
 
 @app.route('/upload', methods=['GET', 'POST'])

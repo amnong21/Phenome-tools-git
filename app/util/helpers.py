@@ -10,6 +10,10 @@ s3 = boto3.client(
     aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
 
+def generate_download_url(filename):
+    url = s3.generate_presigned_url('get_object', Params = {'Bucket': os.getenv('AWS_BUCKET_NAME'), 'Key': filename}, ExpiresIn = 100)
+    return url
+
 def upload_file_to_s3(file, acl="public-read"):
     filename = secure_filename(file.filename)
     try:
@@ -28,7 +32,6 @@ def upload_file_to_s3(file, acl="public-read"):
         print("Something Happened Amnon: ", e)
         return e
     
-
     # after upload file to s3 bucket, return url of the uploaded file
     uploaded_file_url = "{}{}{}".format(os.getenv('AWS_DOMAIN'), app.config['UPLOAD_PATH'],file.filename)
     return uploaded_file_url
@@ -54,7 +57,6 @@ def allowed_image(filename):
         return False
 
 def allowed_file(filename):
-
     if not "." in filename:
         return False
     ext  = filename.rsplit(".", 1)[1]
