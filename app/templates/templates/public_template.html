@@ -20,8 +20,7 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
     <a href="https://knowledge-base.phenome-networks.com/kb/en" target="_blank">
-    <img src="{{url_for('static', filename='img/phenome_Logo_Final.png')}}"
-      alt="Phenome" style="width:130px" /></a>
+      <img src="{{url_for('static', filename='img/phenome_Logo_Final.png')}}" alt="Phenome" style="width:130px" /></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -51,6 +50,10 @@
   <!-- Import our custom JavaScript -->
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
   {% block script %}{% endblock %}
+
+  <!-- Wix widget-->
+  <script
+    type="text/javascript">!function () { function e() { var e = document.createElement("script"); e.type = "text/javascript", e.async = !0, e.src = "https://phenome-networks.wixanswers.com/apps/widget/v1/phenome-networks/b9809362-8a83-4831-a80d-db324b798e3c/en/embed.js"; var t = document.getElementsByTagName("script")[0]; t.parentNode.insertBefore(e, t) } window.addEventListener ? window.addEventListener("load", e) : window.attachEvent("onload", e), window.AnswersWidget = { onLoaded: function (e) { window.AnswersWidget.queue.push(e) }, queue: [] } }();</script>
 </body>
 
 </html>
