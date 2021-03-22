@@ -42,9 +42,9 @@ def upload():
             final_file_name = file_name_without_ext + '_list_of_plots.csv'
 
             if file_ext == 'csv':
-                plots = convert_map(pd.read_csv(request.files.get('file')))
+                plots = convert_map(pd.read_csv(request.files.get('file'), header=None))
             else: #excel
-                plots = convert_map(pd.read_excel(request.files.get('file'), converters={'Date': str}))
+                plots = convert_map(pd.read_excel(request.files.get('file'), header=None, converters={'Date': str}))
 
             df = pd.DataFrame(plots, columns=["Genotype", "Entry", "Plot", "Row", "Column"])
             save_csv_to_s3(df, final_file_name)
