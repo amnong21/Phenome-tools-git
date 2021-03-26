@@ -1,0 +1,69 @@
+{% extends "templates/public_template.html" %}
+
+{% block title %}PhenomeTools-Match variables{% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+
+            <h1>Match variables</h1>
+            <hr>
+
+            <form action="/prepare_file" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Fixes the headers in your upload file to match with your Phenome variable names</label>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="file" id="file-upload">
+                        <label class="custom-file-label" for="file-upload">Drag or Select variables file (xlsx, xls,
+                            csv)..</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Show variables</button>
+
+                <a href="{{url_for('static', filename='example_variable_list.xlsx')}}" class="btn btn-primary"
+                    download="example_variable_list">Example variable list</a>
+
+                <script>
+                    $('#file-upload').on('change', function () {
+                        //get the file name
+                        var fileName = $(this).val();
+                        var cleanFileName = fileName.replace('C:\\fakepath\\', " ");
+                        //replace the "Choose a file" label
+                        $(this).next('.custom-file-label').html(cleanFileName);
+                    })
+                </script>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Paste your list of variables</label>
+                    <textarea class="form-control" name="variables_list" id="variables_list" rows="3"></textarea>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<div>
+
+<div class="container">
+    
+    <table class="table table-striped" table_id="decisions">
+        <tr>
+            {% for header in headers %}
+            <th> {{ header }}</th>
+            {% endfor %}
+        </tr>
+
+            {% for row in data %}
+            <tr>
+                {% for cell in row %}
+                <td> {{ cell }}</td>
+                {% endfor%}
+            </tr>
+            {% endfor%}
+    </table>
+</div>
+
+    {% endblock %}

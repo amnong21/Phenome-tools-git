@@ -10,7 +10,7 @@
   <!-- Import our custom stylesheet -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="shortcut icon" type="image/png" href="static/img/favicon.png">
-  <title>    
+  <title>
     {% block title %}{% endblock %}
   </title>
   <!-- This script is to put the selected file in the select file box-->
@@ -23,7 +23,7 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
     <a href="https://knowledge-base.phenome-networks.com/kb/en" target="_blank">
       <img src="{{url_for('static', filename='img/phenome_Logo_Final.png')}}" alt="Phenome" style="width:130px" /></a>
-     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -34,12 +34,28 @@
           <a class="nav-link" href="/home" style="padding-left: 50px;"> Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/upload" style="padding-left: 25px;">Map Converter (Beta version)</a>
+          <a class="nav-link" href="/upload" style="padding-left: 25px;">Map Converter (Beta)</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/prepare_file" style="padding-left: 25px;">Prepare file (Beta)</a>
         </li>
       </ul>
     </div>
 
   </nav>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    <span>{{ message }}</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
 
   <main>
     {% block main %}{% endblock %}
@@ -57,5 +73,22 @@
   <script
     type="text/javascript">!function () { function e() { var e = document.createElement("script"); e.type = "text/javascript", e.async = !0, e.src = "https://phenome-networks.wixanswers.com/apps/widget/v1/phenome-networks/b9809362-8a83-4831-a80d-db324b798e3c/en/embed.js"; var t = document.getElementsByTagName("script")[0]; t.parentNode.insertBefore(e, t) } window.addEventListener ? window.addEventListener("load", e) : window.attachEvent("onload", e), window.AnswersWidget = { onLoaded: function (e) { window.AnswersWidget.queue.push(e) }, queue: [] } }();</script>
 </body>
+
+<!-- Footer -->
+<footer style =  "position: absolute;
+                  bottom: 2%;
+                  width: 100%;
+                  height: 2.5rem;
+                  padding-top: 0rem;" 
+                  class="bg-light text-center text-lg-start">
+  <!-- Copyright -->
+  <div class="text-center p-3" style="background-color: #f8f9fa; color: rgba(0,0,0,.7);">
+    © 2021 Copyright:
+    <a class="text-dark" href="mailto:amnon@phenome-networks.com">amnon@phenome-networks.com</a>
+
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->
 
 </html>
