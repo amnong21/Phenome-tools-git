@@ -111,6 +111,6 @@ def upload():
 # def show_table():
 #     return 
 
-# @app.route('/album')
-# def show_album():
-#     return render_template('album.html')
+@app.route('/album')
+def show_album():
+    return render_template('album.html')
