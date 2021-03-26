@@ -34,7 +34,6 @@ def server_error(e):
 @app.route('/download/<filename>')
 def download_file(filename):
     url = generate_download_url(filename)
-    print(url) # TODO: remove
     return redirect(url, code=302)
 
 @app.route('/upload', methods=['GET', 'POST'])
