@@ -31,7 +31,6 @@ def server_error(e):
 
     return render_template("error_handlers/500.html"), 500
 
-
 @app.route('/download/<filename>')
 def download_file(filename):
     url = generate_download_url(filename)
@@ -68,51 +67,51 @@ def upload():
                 redirect(request.url)
     return render_template('upload.html')
 
-@app.route('/prepare_file', methods=['GET', 'POST'])
-def prepare_file():
+# @app.route('/prepare_file', methods=['GET', 'POST'])
+# def prepare_file():
 
-    if request.method == 'POST':
+#     if request.method == 'POST':
         
-        # Getting variables from form textbox:
-        variables_list = request.form['variables_list'].rsplit(",")
-        variables_list = [var.lower() for var in variables_list]
-        variables_list.insert(0, 'name')
+#         # Getting variables from form textbox:
+#         variables_list = request.form['variables_list'].rsplit(",")
+#         variables_list = [var.lower() for var in variables_list]
+#         variables_list.insert(0, 'name')
 
-        if request.files:
+#         if request.files:
             
-            uploaded_file = request.files["file"]
-            filename = uploaded_file.filename
+#             uploaded_file = request.files["file"]
+#             filename = uploaded_file.filename
             
-            message = check_file_name(uploaded_file.filename)
-            flash(message[0], message[1])
+#             message = check_file_name(uploaded_file.filename)
+#             flash(message[0], message[1])
 
-            if message[1] == 'success':
-                filename = secure_filename(uploaded_file.filename) 
-                file_name_without_ext, file_ext  = filename.rsplit(".", 1)
-                # final_file_name = file_name_without_ext + '_list_of_plots.csv'
+#             if message[1] == 'success':
+#                 filename = secure_filename(uploaded_file.filename) 
+#                 file_name_without_ext, file_ext  = filename.rsplit(".", 1)
+#                 # final_file_name = file_name_without_ext + '_list_of_plots.csv'
 
-                if file_ext == 'csv':
-                    data = pd.read_csv(request.files.get('file'))
-                else: #excel
-                    data = pd.read_excel(request.files.get('file'))
+#                 if file_ext == 'csv':
+#                     data = pd.read_csv(request.files.get('file'))
+#                 else: #excel
+#                     data = pd.read_excel(request.files.get('file'))
 
-                decisions = check_variables(variables_list, data)
-                headers = decisions.columns.tolist()
-                headers.insert(0, "Variable")   
+#                 decisions = check_variables(variables_list, data)
+#                 headers = decisions.columns.tolist()
+#                 headers.insert(0, "Variable")   
                              
-                data = decisions.to_records().tolist() # returns a list of tuples
+#                 data = decisions.to_records().tolist() # returns a list of tuples
                 
-                return render_template('show_table.html', headers = headers, data=data)
+#                 return render_template('show_table.html', headers = headers, data=data)
 
-            else:
-                flash("Something went wrong", "warning")
-                # redirect(request.url)
-    return render_template('fix_variables.html')
+#             else:
+#                 flash("Something went wrong", "warning")
+#                 # redirect(request.url)
+#     return render_template('fix_variables.html')
 
-@app.route('/show_table')
-def show_table():
-    return 
+# @app.route('/show_table')
+# def show_table():
+#     return 
 
-@app.route('/album')
-def show_album():
-    return render_template('album.html')
+# @app.route('/album')
+# def show_album():
+#     return render_template('album.html')
