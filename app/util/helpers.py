@@ -6,6 +6,7 @@ from app import app
 import pandas as pd
 from io import StringIO  # python3
 
+# General s3 config
 s3 = boto3.client(
     "s3",
     aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
@@ -19,7 +20,6 @@ def generate_download_url(filename):
 
 
 def upload_file_to_s3(file, acl="public-read"):
-    filename = secure_filename(file.filename)
     try:
         s3.upload_fileobj(
             file,
@@ -30,7 +30,6 @@ def upload_file_to_s3(file, acl="public-read"):
                 "ContentType": file.content_type
             }
         )
-
     except Exception as e:
         # This is a catch all exception, edit this part to fit your needs.
         print("Something Happened Amnon: ", e)
@@ -83,5 +82,6 @@ def check_file_name(filename):
         message = ["File extension is not allowed, use only {}".format(
                 ', '.join(app.config['UPLOAD_EXTENSIONS'])), "warning"]
         return message
+    
     message = ["Success", "success"]
     return message
