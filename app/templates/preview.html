@@ -1,0 +1,90 @@
+{% extends "templates/public_template.html" %}
+
+{% block title %}PhenomeTools-Match variables{% endblock %}
+
+{% block main %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm">
+      <form class='form' action="/preview/" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="variables_list">Paste your list of variables</label>
+          <textarea class="form-control" name="variables_list" id="variables_list" rows="3"
+            placeholder="..."></textarea>
+          <button class="btn btn-primary" type="submit" id="submit" onclick="add_variables();">Add</button>
+          <form action="clear_variables" , method='DELETE'>
+            <!-- <button type="submit" class="btn btn-secondary">Clear</button> -->
+          </form>
+
+        </div>
+      </form>
+
+      <div class="row">Variables: {{ variables_list }} </div>
+      <div id="successAlert" class="alert alert-success" role="alert" style="display:none;"></div>
+      <div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
+    </div>
+    <div class="col-lg">
+      <div class="container" style="left: 0; overflow-x: scroll; ">
+        <table class="table table-striped" table_id="data">
+          <tr>
+            {% for header in headers %}
+            <th> {{ header }}</th>
+            {% endfor %}
+          </tr>
+          {% for row in data %}
+          <tr>
+            {% for cell in row %}
+            <td> {{ cell }}</td>
+            {% endfor%}
+          </tr>
+          {% endfor%}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+
+  function add_variables() {
+
+    var variables_list = document.getElementById("variables_list");
+
+    var variables_to_add = {
+      name: variables_list.value,
+    };
+    console.log(variables_to_add);
+    
+    fetch(`${window.origin}/preview/add_variables`, {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify(variables_to_add),
+      cache: "no-cache",
+      headers: new Headers({
+        "content-type": "application/json"
+      })
+    })
+      .then(function (response) {
+        if (response.status !== 200) {
+          console.log(`Looks like there was a problem. Status code: ${response.status}`);
+          return;
+        }
+        response.json().then(function (data) {
+          console.log(data);
+          debugger;
+        });
+      })
+      .catch(function (error) {
+        console.log("Fetch error: " + error);
+      });
+
+  }
+
+</script>
+
+{% endblock %}
