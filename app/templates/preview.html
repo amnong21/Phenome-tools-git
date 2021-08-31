@@ -11,7 +11,7 @@
         <div class="form-group">
           <label for="variables_list">Paste your list of variables</label>
           <textarea class="form-control" name="variables_list" id="variables_list" rows="3"
-            placeholder="..."></textarea>
+            placeholder=""></textarea>
           <button class="btn btn-primary" type="submit" id="submit" onclick="add_variables();">Add</button>
           <form action="clear_variables" , method='DELETE'>
             <!-- <button type="submit" class="btn btn-secondary">Clear</button> -->
@@ -21,8 +21,6 @@
       </form>
 
       <div class="row">Variables: {{ variables_list }} </div>
-      <div id="successAlert" class="alert alert-success" role="alert" style="display:none;"></div>
-      <div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
     </div>
     <div class="col-lg">
       <div class="container" style="left: 0; overflow-x: scroll; ">
@@ -59,7 +57,7 @@
       name: variables_list.value,
     };
     console.log(variables_to_add);
-    
+
     fetch(`${window.origin}/preview/add_variables`, {
       method: "POST",
       credentials: "include",
@@ -75,8 +73,8 @@
           return;
         }
         response.json().then(function (data) {
-          console.log(data);
-          debugger;
+          console.log(data); //:todo
+
         });
       })
       .catch(function (error) {
